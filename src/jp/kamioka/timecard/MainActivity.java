@@ -1,10 +1,15 @@
 package jp.kamioka.timecard;
 
+import java.text.Format;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Vibrator;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.Menu;
@@ -17,8 +22,8 @@ import android.widget.Toast;
 public class MainActivity extends Activity implements OnClickListener
 {
 	private static final String TAG = "MainActivity";
+	private static final Format FORMAT_TIME = new SimpleDateFormat("HH:mm");
 
-	/** Called when the activity is first created. */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -53,9 +58,13 @@ public class MainActivity extends Activity implements OnClickListener
 			long endTime = System.currentTimeMillis();
 			CalendarAccessor.Event event = new CalendarAccessor.Event(title, startTime, endTime);
 			new CalendarAccessor(this).addEvent(calendar, event);
-			Toast.makeText(this, calendar+"<<"+event, Toast.LENGTH_LONG).show();
+
+			String msg = FORMAT_TIME.format(new Date(startTime))+" "+event.title();
+			Toast.makeText(this, msg, Toast.LENGTH_LONG).show();
+			((Vibrator)getSystemService(VIBRATOR_SERVICE)).vibrate(200);
 		} catch ( CalendarAccessException e ) {
-			Toast.makeText(this, ""+e.getMessage(), Toast.LENGTH_SHORT).show();			
+			Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
+			((Vibrator)getSystemService(VIBRATOR_SERVICE)).vibrate(new long[]{0,200,100,200}, -1);
 		}
 	}
 
@@ -75,7 +84,7 @@ public class MainActivity extends Activity implements OnClickListener
 			Intent intent = new Intent(this, PrefActivity.class);
 			startActivity(intent);
 			break;
-		default:
+		case 1:
 			new AlertDialog.Builder(this)
 			.setTitle(R.string.label_version)
 			.setMessage(Const.NAME+"-"+Const.VERSION)
