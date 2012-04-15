@@ -8,6 +8,9 @@
         android:id="@+id/button_punch"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:text="@string/label_punch" />
+        android:layout_margin="3pt"
+        android:layout_weight="0"
+        android:text="@string/label_punch"
+        android:textSize="18pt" />
 
 </LinearLayout>

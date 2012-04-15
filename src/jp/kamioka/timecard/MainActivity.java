@@ -41,8 +41,10 @@ public class MainActivity extends Activity implements OnClickListener
 		Log.d(TAG, "onClick(): preference: calendar="+calendar);	
 		if ( calendar == null ) {
 			new AlertDialog.Builder(this)
-			.setTitle("Notice")
-			.setMessage("empty calendar name")
+			.setTitle(R.string.label_notice)
+			.setMessage(R.string.msg_empty_calendarname)
+			.setIcon(android.R.drawable.ic_dialog_info)
+			.setPositiveButton(R.string.label_ok, null)
 			.show();
 			return;
 		}

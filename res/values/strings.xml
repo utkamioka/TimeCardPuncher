@@ -3,7 +3,7 @@
 
     <string name="hello">Hello World, MainActivity!</string>
     <string name="app_name">TimeCardPuncher</string>
-    <string name="label_punch">Punch!</string>
+    <string name="label_punch">Punch</string>
     <string name="label_preference">Preference</string>
     <string name="label_selectcalendar">Select Calendar</string>
     <string name="label_about">About</string>
@@ -11,5 +11,9 @@
     <string name="label_eventtitle">Event Title</string>
     <string name="msg_newevent">Title of new event</string>
     <string name="defaultvalue_eventtitle">TimeStamp</string>
+    <string name="label_notice">Notice</string>
+    <string name="msg_empty_calendarname">Calendar name is not set.</string>
+    <string name="label_ok">OK</string>
+    <string name="label_cancel">Cancel</string>
 
 </resources>
