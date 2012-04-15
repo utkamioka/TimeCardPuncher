@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
     <ListPreference android:key="pref_selectcalendar" android:entryValues="@array/empty" android:entries="@array/empty" android:title="@string/label_selectcalendar"/>
+    <EditTextPreference android:key="pref_eventtitle" android:dialogMessage="@string/msg_newevent" android:title="@string/label_eventtitle" android:dialogTitle="@string/label_eventtitle" android:defaultValue="@string/defaultvalue_eventtitle"/>
     
 
 </PreferenceScreen>

@@ -8,5 +8,8 @@
     <string name="label_selectcalendar">Select Calendar</string>
     <string name="label_about">About</string>
     <string name="label_version">Version</string>
+    <string name="label_eventtitle">Event Title</string>
+    <string name="msg_newevent">Title of new event</string>
+    <string name="defaultvalue_eventtitle">TimeStamp</string>
 
 </resources>

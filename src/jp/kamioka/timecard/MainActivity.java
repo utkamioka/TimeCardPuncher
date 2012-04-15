@@ -17,24 +17,23 @@ import android.widget.Toast;
 public class MainActivity extends Activity implements OnClickListener
 {
 	private static final String TAG = "MainActivity";
-	
-	/** Called when the activity is first created. */
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.main);
 
-        Button punchButton = (Button)findViewById(R.id.button_punch);
-        punchButton.setOnClickListener(this);
-    }
+	/** Called when the activity is first created. */
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.main);
+
+		Button punchButton = (Button)findViewById(R.id.button_punch);
+		punchButton.setOnClickListener(this);
+	}
 
 	@Override
 	public void onClick(View v)
 	{
 		SharedPreferences preference = PreferenceManager.getDefaultSharedPreferences(this);
 		String calendar = preference.getString("pref_selectcalendar", null);
-		Log.d(TAG, "onClick(): preference: calendar="+calendar);
-		
+		Log.d(TAG, "onClick(): preference: calendar="+calendar);	
 		if ( calendar == null ) {
 			new AlertDialog.Builder(this)
 			.setTitle("Notice")
@@ -42,19 +41,24 @@ public class MainActivity extends Activity implements OnClickListener
 			.show();
 			return;
 		}
-		
+
+		String title = preference.getString("pref_eventtitle", null);
+		Log.d(TAG, "onClick(): preference: title="+title);
+		if ( title == null ) {
+			title = (String)getText(R.string.defaultvalue_eventtitle);
+		}
+
 		try {
 			long startTime = System.currentTimeMillis();
 			long endTime = System.currentTimeMillis();
-
-			CalendarAccessor.Event event = new CalendarAccessor.Event("打刻", startTime, endTime);
+			CalendarAccessor.Event event = new CalendarAccessor.Event(title, startTime, endTime);
 			new CalendarAccessor(this).addEvent(calendar, event);
 			Toast.makeText(this, calendar+"<<"+event, Toast.LENGTH_LONG).show();
 		} catch ( CalendarAccessException e ) {
 			Toast.makeText(this, ""+e.getMessage(), Toast.LENGTH_SHORT).show();			
 		}
 	}
-	
+
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu)
 	{
@@ -62,7 +66,7 @@ public class MainActivity extends Activity implements OnClickListener
 		menu.add(Menu.NONE, 1, 1, R.string.label_about).setIcon(android.R.drawable.ic_menu_info_details);
 		return super.onCreateOptionsMenu(menu);
 	}
-	
+
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item)
 	{

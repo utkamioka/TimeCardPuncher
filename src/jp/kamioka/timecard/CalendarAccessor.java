@@ -15,15 +15,15 @@ public class CalendarAccessor
 {
 	private static final String TAG = "CalendarAccessor";
 	private Activity mActivity;
-	
+
 	public CalendarAccessor(Activity a)
 	{
 		mActivity = a;
 	}
-	
+
 	private static final String COLUMN_NAME = "name";
 	private static final String COLUMN_ID = "_id";
-	
+
 	private static final String[] PROJECTION = new String[] { COLUMN_ID, COLUMN_NAME };
 	private static final String SELECTION = "access_level" + "=?";
 	private static final String[] SELECTION_ARGS = new String[] { "700" };
@@ -32,7 +32,7 @@ public class CalendarAccessor
 	private static final String AUTHORITY = "com.android.calendar";
 	private static final Uri CALENDAR_URI = Uri.parse("content://"+AUTHORITY+"/calendars");
 	private static final Uri EVENT_URI = Uri.parse("content://"+AUTHORITY+"/events");
-	
+
 	/**
 	 * 指定カレンダーのIDを取得。
 	 * @param name
@@ -51,7 +51,7 @@ public class CalendarAccessor
 		}
 		return -1;
 	}
-	
+
 	public String[] getCalendars()
 	{
 		Cursor c = mActivity.managedQuery(CALENDAR_URI, PROJECTION, SELECTION, SELECTION_ARGS, null);
@@ -68,7 +68,7 @@ public class CalendarAccessor
 		}		
 		return (String[])list.toArray(new String[0]);
 	}
-	
+
 	public void addEvent(String calendarName, Event event)
 	throws CalendarAccessException
 	{
