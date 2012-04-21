@@ -30,6 +30,7 @@ public class MainActivity extends Activity implements OnClickListener {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        if (LOCAL_LOGV) Log.v(TAG, "onCreate(): in: bundle="+savedInstanceState);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
 
@@ -41,6 +42,7 @@ public class MainActivity extends Activity implements OnClickListener {
 
     @Override
     public void onClick(View v) {
+        if (LOCAL_LOGV) Log.v(TAG, "onClick(): in: view="+v);
         SharedPreferences preference = PreferenceManager.getDefaultSharedPreferences(this);
         String calendar = preference.getString("pref_selectcalendar", null);
         if (LOCAL_LOGV) Log.v(TAG, "onClick(): preference: calendar="+calendar);	
@@ -77,6 +79,7 @@ public class MainActivity extends Activity implements OnClickListener {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+        if (LOCAL_LOGV) Log.v(TAG, "onCreateOptionsMenu(): in: menu="+menu);
         menu.add(Menu.NONE, 0, 0, R.string.label_preference).setIcon(android.R.drawable.ic_menu_manage);
         menu.add(Menu.NONE, 1, 1, R.string.label_about).setIcon(android.R.drawable.ic_menu_info_details);
         return super.onCreateOptionsMenu(menu);
@@ -84,6 +87,7 @@ public class MainActivity extends Activity implements OnClickListener {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        if (LOCAL_LOGV) Log.v(TAG, "onOptionsItemSelected(): in: item="+item);
         switch ( item.getItemId() ) {
         case 0:
             Intent intent = new Intent(this, PrefActivity.class);

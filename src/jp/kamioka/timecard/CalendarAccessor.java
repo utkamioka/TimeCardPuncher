@@ -48,12 +48,12 @@ public class CalendarAccessor {
             do {
                 if ( c.getString(nameColumn).equals(name) ) {
                     int id = c.getInt(idColumn);
-                    Log.i(TAG, "getCalendarId(): return="+id);
+                    Log.i(TAG, "getCalendarId(): name="+name+", return="+id);
                     return id;
                 }
             } while ( c.moveToNext() );
         }
-        Log.i(TAG, "getCalendarId(): return="+-1);
+        Log.i(TAG, "getCalendarId(): name="+name+", return="+-1);
         return -1;
     }
 

@@ -22,7 +22,7 @@ public class PrefActivity extends PreferenceActivity implements OnPreferenceChan
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        if (LOCAL_LOGV) Log.v(TAG, "onCreate():");
+        if (LOCAL_LOGV) Log.v(TAG, "onCreate(): in: bundle="+savedInstanceState);
         super.onCreate(savedInstanceState);
         addPreferencesFromResource(R.xml.pref);
 
@@ -38,7 +38,7 @@ public class PrefActivity extends PreferenceActivity implements OnPreferenceChan
 
     @Override
     public void onResume() {
-        if (LOCAL_LOGV) Log.v(TAG, "onResume():");
+        if (LOCAL_LOGV) Log.v(TAG, "onResume(): in:");
         super.onResume();
 
         String[] calendars = new CalendarAccessor(this).getCalendars();
@@ -58,13 +58,15 @@ public class PrefActivity extends PreferenceActivity implements OnPreferenceChan
 
     @Override
     public boolean onPreferenceChange(Preference preference, Object newValue) {
-        if (LOCAL_LOGV) Log.v(TAG, "onPreferenceChange(): key="+preference.getKey());
+        if (LOCAL_LOGV) Log.v(TAG, "onPreferenceChange(): in: key="+preference.getKey()+", value="+newValue);
         if(preference.getKey().equals("pref_selectcalendar")){
             preference.setSummary(""+newValue);
+            Log.i(TAG, "onPreferenceChanged(): out: "+preference.getKey()+"="+newValue);
             return true;
         }
         if(preference.getKey().equals("pref_eventtitle")){
             preference.setSummary(""+newValue);
+            Log.i(TAG, "onPreferenceChanged(): out: "+preference.getKey()+"="+newValue);
             return true;
         }
         return false;
