@@ -17,7 +17,7 @@ import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
 
-public class CalendarEventTask extends AsyncTask<String, CalendarEventTask.Progress, CalendarEventTask.Result> {
+public class CalendarEventTask extends AsyncTask<String, Void, String> {
     private static final String TAG = CalendarEventTask.class.getSimpleName();
 
     private static final boolean LOCAL_LOGD = true;
@@ -31,28 +31,8 @@ public class CalendarEventTask extends AsyncTask<String, CalendarEventTask.Progr
         mActivity = activity;
     }
 
-    class Progress {
-        private int mProgress = 0;
-        Progress(int progress) {
-            mProgress = progress;
-        }
-        private int progress() { return mProgress; }
-    }
-
-    class Result extends Progress {
-        private Uri mUri = null;
-        private String mMsg = null;
-        Result(Uri uri, String msg) {
-            super(100);
-            mUri = uri;
-            mMsg = msg;
-        }
-        private Uri uri() { return mUri; }
-        private String message() { return mMsg; }
-    }
-
     @Override
-    protected Result doInBackground(String... args) {
+    protected String doInBackground(String... args) {
         if (LOCAL_LOGV) Log.v(TAG, "doInBackground(): in: args"+Arrays.asList(args));
 
         String calendar = args[0];
@@ -63,35 +43,19 @@ public class CalendarEventTask extends AsyncTask<String, CalendarEventTask.Progr
             long endTime = System.currentTimeMillis();
             CalendarAccessor.Event event = new CalendarAccessor.Event(title, startTime, endTime);
             boolean writeEventFlag = true;
-            Uri uri = new CalendarAccessor(mActivity).addEvent(calendar, event, writeEventFlag);
+            new CalendarAccessor(mActivity).addEvent(calendar, event, writeEventFlag);
             notify(null, DEFAULT_NOTIFICATION_URI, new long[]{0,200});
-            String msg = FORMAT_TIME.format(new Date(startTime))+" "+event.title();
-            return new Result(uri, msg);
+            return FORMAT_TIME.format(new Date(startTime))+" "+event.title();
         } catch (CalendarAccessException e) {
             notify(null, null, new long[]{0,200,100,200});
-            return new Result(null, e.getMessage());
+            return e.getMessage();
         }
     }
 
     @Override
-    public void onCancelled() {
-        if (LOCAL_LOGV) Log.v(TAG, "onCancelled(): in:");
-    }
-
-    @Override
-    public void onPreExecute() {
-        if (LOCAL_LOGV) Log.v(TAG, "onPreExecute(): in:");
-    }
-
-    @Override
-    public void onPostExecute(Result result) {
+    public void onPostExecute(String result) {
         if (LOCAL_LOGV) Log.v(TAG, "onPostExecute(): in: result="+result);
-        Toast.makeText(mActivity, result.message(), Toast.LENGTH_LONG).show();
-    }
-
-    @Override
-    public void onProgressUpdate(Progress... progress) {
-        if (LOCAL_LOGV) Log.v(TAG, "onProgressUpdate(): in: progress="+Arrays.asList(progress));
+        Toast.makeText(mActivity, result, Toast.LENGTH_LONG).show();
     }
 
     private void notify(String ticker, Uri sound, long[] vibrate)
