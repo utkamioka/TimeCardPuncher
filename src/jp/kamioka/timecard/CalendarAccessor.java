@@ -74,7 +74,7 @@ public class CalendarAccessor {
         return (String[])list.toArray(new String[0]);
     }
 
-    public void addEvent(String calendarName, Event event) throws CalendarAccessException {
+    public void addEvent(String calendarName, Event event, boolean flag) throws CalendarAccessException {
         int id = getCalendarId(calendarName);
         if ( id < 0 ) {
             if (LOCAL_LOGV) Log.v(TAG, calendarName+": No such calendar.");
@@ -86,8 +86,10 @@ public class CalendarAccessor {
         values.put("calendar_id", id);
 
         ContentResolver contentResolver = mActivity.getContentResolver();
-        Uri entry = contentResolver.insert(EVENT_URI, values);
-        Log.i(TAG, "addEvent(): New calendar entry: "+entry);
+        if ( flag ) {
+            Uri entry = contentResolver.insert(EVENT_URI, values);
+            Log.i(TAG, "addEvent(): New calendar entry: "+entry);
+        }
     }
 
     public static class Event {

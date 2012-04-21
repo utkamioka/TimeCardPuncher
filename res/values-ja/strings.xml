@@ -15,5 +15,9 @@
     <string name="msg_empty_calendarname">カレンダーが選択されていません。</string>
     <string name="label_ok">OK</string>
     <string name="label_cancel">Cancel</string>
-
+    <string name="label_notify_with_vibrate">バイブレーションで通知</string>
+    <string name="label_notify_with_sound">サウンドで通知</string>
+    <string name="label_do">する</string>
+    <string name="label_dont">しない</string>
+    
 </resources>

@@ -2,12 +2,16 @@ package jp.kamioka.timecard;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.nfc.NfcAdapter;
 import android.os.Bundle;
-import android.os.Vibrator;
 import android.preference.PreferenceManager;
+import android.provider.Settings;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -19,6 +23,8 @@ import android.widget.Toast;
 import java.text.Format;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+
+import static android.provider.Settings.System.DEFAULT_NOTIFICATION_URI;
 
 public class MainActivity extends Activity implements OnClickListener {
     private static final String TAG = MainActivity.class.getSimpleName();
@@ -38,6 +44,8 @@ public class MainActivity extends Activity implements OnClickListener {
         punchButton.setOnClickListener(this);
 
         Log.i(TAG, "NFC Enabled="+isNfcEnabled());
+
+        Log.v(TAG, ""+Settings.System.DEFAULT_NOTIFICATION_URI);
     }
 
     @Override
@@ -66,15 +74,31 @@ public class MainActivity extends Activity implements OnClickListener {
             long startTime = System.currentTimeMillis();
             long endTime = System.currentTimeMillis();
             CalendarAccessor.Event event = new CalendarAccessor.Event(title, startTime, endTime);
-            new CalendarAccessor(this).addEvent(calendar, event);
+            boolean writeEventFlag = true;
+            new CalendarAccessor(this).addEvent(calendar, event, writeEventFlag);
 
             String msg = FORMAT_TIME.format(new Date(startTime))+" "+event.title();
             Toast.makeText(this, msg, Toast.LENGTH_LONG).show();
-            ((Vibrator)getSystemService(VIBRATOR_SERVICE)).vibrate(200);
+            notify(null, DEFAULT_NOTIFICATION_URI, new long[]{0,200});
         } catch ( CalendarAccessException e ) {
             Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
-            ((Vibrator)getSystemService(VIBRATOR_SERVICE)).vibrate(new long[]{0,200,100,200}, -1);
+            notify(null, null, new long[]{0,200,100,200});
         }
+    }
+
+    private void notify(String ticker, Uri sound, long[] vibrate)
+    {
+        SharedPreferences preference = PreferenceManager.getDefaultSharedPreferences(this);
+        boolean notifyWithSound = preference.getBoolean("pref_notify_with_sound", false);
+        boolean notifyWithVibrate = preference.getBoolean("pref_notify_with_vibrate", false);
+
+        Notification notification = new Notification();
+        notification.flags = Notification.FLAG_AUTO_CANCEL;
+        if (ticker != null) notification.tickerText = ticker;
+        if (sound != null && notifyWithSound) notification.sound = sound;
+        if (vibrate != null && notifyWithVibrate) notification.vibrate = vibrate;
+        NotificationManager nManager = (NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
+        nManager.notify(1, notification);
     }
 
     @Override

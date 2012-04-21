@@ -2,6 +2,8 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
     <ListPreference android:key="pref_selectcalendar" android:entryValues="@array/empty" android:entries="@array/empty" android:title="@string/label_selectcalendar"/>
     <EditTextPreference android:key="pref_eventtitle" android:dialogMessage="@string/msg_newevent" android:title="@string/label_eventtitle" android:dialogTitle="@string/label_eventtitle" android:defaultValue="@string/defaultvalue_eventtitle"/>
+    <CheckBoxPreference android:key="pref_notify_with_vibrate" android:title="@string/label_notify_with_vibrate" android:defaultValue="true" android:summaryOff="@string/label_dont" android:summaryOn="@string/label_do"/>
+    <CheckBoxPreference android:key="pref_notify_with_sound" android:title="@string/label_notify_with_sound" android:defaultValue="false" android:summaryOff="@string/label_dont" android:summaryOn="@string/label_do"/>
     
 
 </PreferenceScreen>
