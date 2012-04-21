@@ -1,9 +1,5 @@
 package jp.kamioka.timecard;
 
-import java.text.Format;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
@@ -20,8 +16,16 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.Toast;
 
+import java.text.Format;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 public class MainActivity extends Activity implements OnClickListener {
     private static final String TAG = MainActivity.class.getSimpleName();
+
+    private static final boolean LOCAL_LOGD = true;
+    private static final boolean LOCAL_LOGV = false;
+
     private static final Format FORMAT_TIME = new SimpleDateFormat("HH:mm");
 
     @Override
@@ -39,8 +43,8 @@ public class MainActivity extends Activity implements OnClickListener {
     public void onClick(View v) {
         SharedPreferences preference = PreferenceManager.getDefaultSharedPreferences(this);
         String calendar = preference.getString("pref_selectcalendar", null);
-        Log.d(TAG, "onClick(): preference: calendar="+calendar);	
-        if ( calendar == null ) {
+        if (LOCAL_LOGV) Log.v(TAG, "onClick(): preference: calendar="+calendar);	
+        if (calendar == null) {
             new AlertDialog.Builder(this)
             .setTitle(R.string.label_notice)
             .setMessage(R.string.msg_empty_calendarname)
@@ -51,7 +55,7 @@ public class MainActivity extends Activity implements OnClickListener {
         }
 
         String title = preference.getString("pref_eventtitle", null);
-        Log.d(TAG, "onClick(): preference: title="+title);
+        if (LOCAL_LOGV) Log.v(TAG, "onClick(): preference: title="+title);
         if ( title == null ) {
             title = (String)getText(R.string.defaultvalue_eventtitle);
         }

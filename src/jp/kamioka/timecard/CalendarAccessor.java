@@ -1,9 +1,5 @@
 package jp.kamioka.timecard;
 
-import java.util.ArrayList;
-import java.util.List;
-
-
 import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.ContentValues;
@@ -11,10 +7,14 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.util.Log;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class CalendarAccessor {
     private static final String TAG = CalendarAccessor.class.getSimpleName();
 
-    private Activity mActivity;
+    private static final boolean LOCAL_LOGD = true;
+    private static final boolean LOCAL_LOGV = false;
 
     private static final String COLUMN_NAME = "name";
     private static final String COLUMN_ID = "_id";
@@ -28,6 +28,7 @@ public class CalendarAccessor {
     private static final Uri CALENDAR_URI = Uri.parse("content://"+AUTHORITY+"/calendars");
     private static final Uri EVENT_URI = Uri.parse("content://"+AUTHORITY+"/events");
 
+    private Activity mActivity;
 
     public CalendarAccessor(Activity a) {
         mActivity = a;
@@ -43,11 +44,16 @@ public class CalendarAccessor {
         if ( c.moveToFirst() ) {
             int nameColumn = c.getColumnIndex(COLUMN_NAME);
             int idColumn = c.getColumnIndex(COLUMN_ID);
-            Log.d(TAG, "getCalendarId(): Columns: name="+nameColumn+", id="+idColumn);
+            if (LOCAL_LOGV) Log.v(TAG, "getCalendarId(): Columns: name="+nameColumn+", id="+idColumn);
             do {
-                if ( c.getString(nameColumn).equals(name) ) return c.getInt(idColumn);
+                if ( c.getString(nameColumn).equals(name) ) {
+                    int id = c.getInt(idColumn);
+                    Log.i(TAG, "getCalendarId(): return="+id);
+                    return id;
+                }
             } while ( c.moveToNext() );
         }
+        Log.i(TAG, "getCalendarId(): return="+-1);
         return -1;
     }
 
@@ -60,27 +66,28 @@ public class CalendarAccessor {
             do {
                 String name = c.getString(nameColumn);
                 int id = c.getInt(idColumn);
-                Log.d(TAG, "getCalendars(): name="+name+", id="+id);
+                if (LOCAL_LOGV) Log.v(TAG, "getCalendars(): name="+name+", id="+id);
                 list.add(c.getString(nameColumn));
             } while (c.moveToNext());
-        }		
+        }
+        Log.i(TAG, "getCalendars(): return="+list);
         return (String[])list.toArray(new String[0]);
     }
 
     public void addEvent(String calendarName, Event event) throws CalendarAccessException {
         int id = getCalendarId(calendarName);
         if ( id < 0 ) {
-            Log.d(TAG, calendarName+": No such calendar.");
+            if (LOCAL_LOGV) Log.v(TAG, calendarName+": No such calendar.");
             throw new CalendarAccessException(calendarName+": No such calendar.");
         }
-        Log.d(TAG, calendarName+"'s calendar ID: "+id);
+        if (LOCAL_LOGV) Log.v(TAG, calendarName+"'s calendar ID: "+id);
 
         ContentValues values = event.toContentValues();
         values.put("calendar_id", id);
 
         ContentResolver contentResolver = mActivity.getContentResolver();
         Uri entry = contentResolver.insert(EVENT_URI, values);
-        Log.d(TAG, "New calendar entry: "+entry);
+        Log.i(TAG, "addEvent(): New calendar entry: "+entry);
     }
 
     public static class Event {
