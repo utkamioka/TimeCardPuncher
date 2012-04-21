@@ -5,6 +5,7 @@ import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Build;
 import android.util.Log;
 
 import java.util.ArrayList;
@@ -24,7 +25,7 @@ public class CalendarAccessor {
     private static final String[] SELECTION_ARGS = new String[] { "700" };
 
     //Froyo以前のOSの場合、content://calendar/calendarsを指定する
-    private static final String AUTHORITY = "com.android.calendar";
+    private static final String AUTHORITY = ((Build.VERSION.SDK_INT>=8)?("com.android.calendar"):("calendar"));
     private static final Uri CALENDAR_URI = Uri.parse("content://"+AUTHORITY+"/calendars");
     private static final Uri EVENT_URI = Uri.parse("content://"+AUTHORITY+"/events");
 
@@ -74,7 +75,8 @@ public class CalendarAccessor {
         return (String[])list.toArray(new String[0]);
     }
 
-    public void addEvent(String calendarName, Event event, boolean flag) throws CalendarAccessException {
+    public Uri addEvent(String calendarName, Event event, boolean flag) throws CalendarAccessException {
+//        try { Thread.currentThread().sleep(5000); } catch ( Exception e ) {}
         int id = getCalendarId(calendarName);
         if ( id < 0 ) {
             if (LOCAL_LOGV) Log.v(TAG, calendarName+": No such calendar.");
@@ -89,7 +91,9 @@ public class CalendarAccessor {
         if ( flag ) {
             Uri entry = contentResolver.insert(EVENT_URI, values);
             Log.i(TAG, "addEvent(): New calendar entry: "+entry);
+            return entry;
         }
+        return null;
     }
 
     public static class Event {
