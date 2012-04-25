@@ -40,7 +40,7 @@ public class CalendarEventTask extends AsyncTask<String, Void, String> {
 
         try {
             long startTime = System.currentTimeMillis();
-            long endTime = System.currentTimeMillis();
+            long endTime = startTime;
             CalendarAccessor.Event event = new CalendarAccessor.Event(title, startTime, endTime);
             boolean writeEventFlag = true;
             new CalendarAccessor(mActivity).addEvent(calendar, event, writeEventFlag);
