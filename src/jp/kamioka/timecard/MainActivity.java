@@ -29,8 +29,6 @@ public class MainActivity extends Activity implements OnClickListener {
 
         Button punchButton = (Button)findViewById(R.id.button_punch);
         punchButton.setOnClickListener(this);
-        Typeface face = Typeface.createFromAsset(getAssets(), "Ricty-Bold.ttf");
-        punchButton.setTypeface(face);
 
         Log.i(TAG, "NFC Enabled="+isNfcEnabled());
     }
