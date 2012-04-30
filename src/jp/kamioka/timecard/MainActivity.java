@@ -1,10 +1,13 @@
 package jp.kamioka.timecard;
 
+import jp.kamioka.timecard.event.CalendarEntryEvent;
+import jp.kamioka.timecard.event.CalendarEntryListener;
+
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Typeface;
 import android.nfc.NfcAdapter;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -13,13 +16,19 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.ListView;
 
-public class MainActivity extends Activity implements OnClickListener {
+public class MainActivity extends Activity implements OnClickListener, CalendarEntryListener, AdapterView.OnItemLongClickListener {
     private static final String TAG = MainActivity.class.getSimpleName();
 
     private static final boolean LOCAL_LOGD = true;
-    private static final boolean LOCAL_LOGV = false;
+    private static final boolean LOCAL_LOGV = true;
+
+    private Button mPunchButton = null;
+    private ListView mHistoryView = null;
+    private CalendarEntryAdapter mCalendarEntryAdapter = null;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -27,8 +36,13 @@ public class MainActivity extends Activity implements OnClickListener {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
 
-        Button punchButton = (Button)findViewById(R.id.button_punch);
-        punchButton.setOnClickListener(this);
+        mPunchButton = (Button)findViewById(R.id.button_punch);
+        mPunchButton.setOnClickListener(this);
+
+        mHistoryView = (ListView)findViewById(R.id.list_history);
+        mCalendarEntryAdapter = new CalendarEntryAdapter(this);
+        mHistoryView.setAdapter(mCalendarEntryAdapter);
+        mHistoryView.setOnItemLongClickListener(this);
 
         Log.i(TAG, "NFC Enabled="+isNfcEnabled());
     }
@@ -36,26 +50,9 @@ public class MainActivity extends Activity implements OnClickListener {
     @Override
     public void onClick(View v) {
         if (LOCAL_LOGV) Log.v(TAG, "onClick(): in: view="+v);
-        SharedPreferences preference = PreferenceManager.getDefaultSharedPreferences(this);
-        String calendar = preference.getString("pref_selectcalendar", null);
-        if (LOCAL_LOGV) Log.v(TAG, "onClick(): preference: calendar="+calendar);	
-        if (calendar == null) {
-            new AlertDialog.Builder(this)
-            .setTitle(R.string.label_notice)
-            .setMessage(R.string.msg_empty_calendarname)
-            .setIcon(android.R.drawable.ic_dialog_info)
-            .setPositiveButton(R.string.label_ok, null)
-            .show();
-            return;
+        if (v==mPunchButton) {
+            _punchTimeCard();
         }
-
-        String title = preference.getString("pref_eventtitle", null);
-        if (LOCAL_LOGV) Log.v(TAG, "onClick(): preference: title="+title);
-        if ( title == null ) {
-            title = (String)getText(R.string.defaultvalue_eventtitle);
-        }
-
-        new CalendarEventTask(this).execute(calendar, title);
     }
 
     @Override
@@ -78,11 +75,25 @@ public class MainActivity extends Activity implements OnClickListener {
             new AlertDialog.Builder(this)
             .setTitle(R.string.label_version)
             .setMessage(Const.NAME+"-"+Const.VERSION)
-            .setPositiveButton("OK", null)
+            .setIcon(android.R.drawable.ic_dialog_info)
+            .setPositiveButton(android.R.string.ok, null)
             .show();
             break;
         }
         return true;
+    }
+
+    @Override
+    public void calendarEntryAdded(CalendarEntryEvent event) {
+        if (LOCAL_LOGV) Log.v(TAG, "calendarEntryAdded(): event="+event);
+        mCalendarEntryAdapter.addCalendarEntry(event.getCalendarEntry());
+        mHistoryView.setSelectionFromTop(0, 0);
+    }
+
+    @Override
+    public void calendarEntryRemoved(CalendarEntryEvent event) {
+        if (LOCAL_LOGV) Log.v(TAG, "calendarEntryRemoved(): event="+event);
+        mCalendarEntryAdapter.removeCalendarEntry(event.getCalendarEntry());
     }
 
     private boolean isNfcEnabled() {
@@ -91,5 +102,80 @@ public class MainActivity extends Activity implements OnClickListener {
         } catch ( Exception e ) {
             return false;
         }
+    }
+
+    @Override
+    public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+        if (parent==mHistoryView) {
+            final CalendarEntry calendarEntry = (CalendarEntry)mCalendarEntryAdapter.getItem(position);
+            new AlertDialog.Builder(this)
+            .setTitle(R.string.label_delete_timestamp)
+            .setMessage(R.string.msg_ask_delete)
+            .setIcon(android.R.drawable.ic_dialog_info)
+            .setPositiveButton(R.string.label_yes, new DialogInterface.OnClickListener(){
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    _removeCalendarEntry(calendarEntry);
+                }
+            })
+            .setNegativeButton(R.string.label_no, null)
+            .show();
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * 打刻する。
+     */
+    private void _punchTimeCard() {
+        SharedPreferences preference = PreferenceManager.getDefaultSharedPreferences(this);
+
+        // カレンダー名
+        String calendar = preference.getString("pref_selectcalendar", null);
+        if (LOCAL_LOGV) Log.v(TAG, "onClick(): preference: calendar="+calendar);    
+        if (calendar == null) {
+            new AlertDialog.Builder(this)
+            .setTitle(R.string.label_notice)
+            .setMessage(R.string.msg_empty_calendarname)
+            .setIcon(android.R.drawable.ic_dialog_info)
+            .setPositiveButton(R.string.label_ok, null)
+            .show();
+            return;
+        }
+
+        // 時刻
+        long time = System.currentTimeMillis();
+
+        // タイトル
+        String title = preference.getString("pref_eventtitle", null);
+        if (LOCAL_LOGV) Log.v(TAG, "onClick(): preference: title="+title);
+        if ( title == null ) {
+            title = (String)getText(R.string.defaultvalue_eventtitle);
+        }
+        
+        CalendarEntry calendarEntry = new CalendarEntry(calendar, time, title);
+        calendarEntry.setWriteFlag(true);
+        _addCalendarEntry(calendarEntry);
+    }
+
+    /**
+     * カレンダーにイベントを追加する。
+     * @param calendarEntry
+     */
+    private void _addCalendarEntry(CalendarEntry calendarEntry) {
+        CalendarEventTask task = new CalendarEventTask(this);
+        task.addCalendarListener(this);
+        task.execute(new CalendarEventTask.CalendarRequestAdd(calendarEntry));
+    }
+
+    /**
+     * カレンダーからイベントを削除する。
+     * @param calendarEntry
+     */
+    private void _removeCalendarEntry(CalendarEntry calendarEntry) {
+        CalendarEventTask task = new CalendarEventTask(this);
+        task.addCalendarListener(this);
+        task.execute(new CalendarEventTask.CalendarRequestRemove(calendarEntry));
     }
 }

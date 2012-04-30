@@ -19,5 +19,9 @@
     <string name="label_notify_with_sound">サウンドで通知</string>
     <string name="label_do">する</string>
     <string name="label_dont">しない</string>
+    <string name="label_yes">はい</string>
+    <string name="label_no">いいえ</string>
+    <string name="msg_ask_delete">削除しますか？</string>
+    <string name="label_delete_timestamp">タイムスタンプ削除</string>
     
 </resources>

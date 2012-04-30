@@ -13,4 +13,11 @@
         android:text="@string/label_punch"
         android:textSize="18pt" />
 
+    <ListView
+        android:id="@+id/list_history"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="0" >
+    </ListView>
+
 </LinearLayout>

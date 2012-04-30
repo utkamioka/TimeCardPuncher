@@ -96,6 +96,11 @@ public class CalendarAccessor {
         return null;
     }
 
+    public void removeEvent(Uri uri) {
+        ContentResolver contentResolver = mActivity.getContentResolver();
+        contentResolver.delete(uri, null, null);
+    }
+
     public static class Event {
         private String mTitle;
         private String mDescription;
