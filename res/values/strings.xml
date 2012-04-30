@@ -7,20 +7,14 @@
     <string name="label_preference">Preference</string>
     <string name="label_selectcalendar">Select Calendar</string>
     <string name="label_about">About</string>
-    <string name="label_version">Version</string>
     <string name="label_eventtitle">Event Title</string>
     <string name="msg_newevent">Title of new event</string>
     <string name="defaultvalue_eventtitle">TimeStamp</string>
-    <string name="label_notice">Notice</string>
     <string name="msg_empty_calendarname">Calendar name is not set.</string>
-    <string name="label_ok">OK</string>
-    <string name="label_cancel">Cancel</string>
     <string name="label_notify_with_vibrate">Notify with Vibrate</string>
     <string name="label_notify_with_sound">Notify with Sound</string>
     <string name="label_do">do</string>
     <string name="label_dont">don\'t</string>
-    <string name="label_yes">Yes</string>
-    <string name="label_no">No</string>
     <string name="msg_ask_delete">Delete?</string>
     <string name="label_delete_timestamp">Delete TimeStamp</string>
 

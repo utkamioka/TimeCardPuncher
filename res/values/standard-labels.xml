@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="confirm">Confirm</string>
+    <string name="notice">Notice</string>
+    <string name="warning">Warning</string><string name="yes">Yes</string><string name="no">No</string>
+    <string name="version">Version</string>
+    <string name="add">Add</string>
+    <string name="delete">Delete</string>
+    <string name="insert">Insert</string>
+    
+</resources>

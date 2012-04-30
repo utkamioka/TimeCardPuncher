@@ -73,7 +73,7 @@ public class MainActivity extends Activity implements OnClickListener, CalendarE
             break;
         case 1:
             new AlertDialog.Builder(this)
-            .setTitle(R.string.label_version)
+            .setTitle(R.string.version)
             .setMessage(Const.NAME+"-"+Const.VERSION)
             .setIcon(android.R.drawable.ic_dialog_info)
             .setPositiveButton(android.R.string.ok, null)
@@ -112,13 +112,13 @@ public class MainActivity extends Activity implements OnClickListener, CalendarE
             .setTitle(R.string.confirm)
             .setMessage(R.string.msg_ask_delete)
             .setIcon(android.R.drawable.ic_dialog_info)
-            .setPositiveButton(R.string.label_yes, new DialogInterface.OnClickListener(){
+            .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener(){
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     _removeCalendarEntry(calendarEntry);
                 }
             })
-            .setNegativeButton(R.string.label_no, null)
+            .setNegativeButton(R.string.no, null)
             .show();
             return true;
         }
@@ -136,10 +136,10 @@ public class MainActivity extends Activity implements OnClickListener, CalendarE
         if (LOCAL_LOGV) Log.v(TAG, "onClick(): preference: calendar="+calendar);    
         if (calendar == null) {
             new AlertDialog.Builder(this)
-            .setTitle(R.string.label_notice)
+            .setTitle(R.string.notice)
             .setMessage(R.string.msg_empty_calendarname)
             .setIcon(android.R.drawable.ic_dialog_info)
-            .setPositiveButton(R.string.label_ok, null)
+            .setPositiveButton(android.R.string.ok, null)
             .show();
             return;
         }

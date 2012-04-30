@@ -10,6 +10,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
 import android.util.Log;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -113,7 +114,14 @@ public class CalendarEventTask extends AsyncTask<CalendarRequest, Void, AsyncTas
                 onCalendarEntryRemoved(result.getContent());
             }
         } else {
-            String msg = (result.getCause()!=null)?(result.getCause().getMessage()):("");
+            String msg = "Calendar access failure.";
+            if (result.getCause()!=null) {
+                Log.w(TAG, msg, result.getCause());
+                msg = result.getCause().getMessage();
+            } else {
+                Log.w(TAG, msg);
+            }
+            Toast.makeText(mActivity, msg, Toast.LENGTH_LONG).show();
             _notify(msg, null, new long[]{0,200,100,200});
         }
     }
