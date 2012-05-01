@@ -1,10 +1,14 @@
 package jp.kamioka.timecard;
 
+import java.util.Calendar;
+import java.util.Date;
+
 import jp.kamioka.timecard.event.CalendarEntryEvent;
 import jp.kamioka.timecard.event.CalendarEntryListener;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.TimePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -19,8 +23,10 @@ import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.TimePicker;
+import android.widget.Toast;
 
-public class MainActivity extends Activity implements OnClickListener, CalendarEntryListener, AdapterView.OnItemLongClickListener {
+public class MainActivity extends Activity implements OnClickListener, CalendarEntryListener, View.OnLongClickListener, AdapterView.OnItemLongClickListener, TimePickerDialog.OnTimeSetListener {
     private static final String TAG = MainActivity.class.getSimpleName();
 
     private static final boolean LOCAL_LOGD = true;
@@ -38,6 +44,7 @@ public class MainActivity extends Activity implements OnClickListener, CalendarE
 
         mPunchButton = (Button)findViewById(R.id.button_punch);
         mPunchButton.setOnClickListener(this);
+        mPunchButton.setOnLongClickListener(this);
 
         mHistoryView = (ListView)findViewById(R.id.list_history);
         mCalendarEntryAdapter = new CalendarEntryAdapter(this);
@@ -129,6 +136,10 @@ public class MainActivity extends Activity implements OnClickListener, CalendarE
      * 打刻する。
      */
     private void _punchTimeCard() {
+        _punchTimeCard(System.currentTimeMillis());
+    }
+
+    private void _punchTimeCard(long time) {
         SharedPreferences preference = PreferenceManager.getDefaultSharedPreferences(this);
 
         // カレンダー名
@@ -143,9 +154,6 @@ public class MainActivity extends Activity implements OnClickListener, CalendarE
             .show();
             return;
         }
-
-        // 時刻
-        long time = System.currentTimeMillis();
 
         // タイトル
         String title = preference.getString("pref_eventtitle", null);
@@ -177,5 +185,29 @@ public class MainActivity extends Activity implements OnClickListener, CalendarE
         CalendarEventTask task = new CalendarEventTask(this);
         task.addCalendarListener(this);
         task.execute(new CalendarEventTask.CalendarRequestRemove(calendarEntry));
+    }
+
+    @Override
+    public boolean onLongClick(View view) {
+        if (view==mPunchButton) {
+            _punchTimeCardWithTimeAdjust();
+            return true;
+        }
+        return false;
+    }
+
+    private void _punchTimeCardWithTimeAdjust() {
+        Calendar calendar = Calendar.getInstance();
+        int hour = calendar.get(Calendar.HOUR_OF_DAY);
+        int minute = calendar.get(Calendar.MINUTE);
+        new TimePickerDialog(this, this, hour, minute, true).show();
+    }
+
+    @Override
+    public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
+        calendar.set(Calendar.MINUTE, minute);
+        _punchTimeCard(calendar.getTimeInMillis());
     }
 }
