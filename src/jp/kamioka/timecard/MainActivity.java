@@ -1,14 +1,12 @@
 package jp.kamioka.timecard;
 
-import java.util.Calendar;
-import java.util.Date;
-
 import jp.kamioka.timecard.event.CalendarEntryEvent;
 import jp.kamioka.timecard.event.CalendarEntryListener;
+import jp.kamioka.timecard.event.TimeAdjusterEvent;
+import jp.kamioka.timecard.event.TimeAdjusterListener;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.TimePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -23,10 +21,8 @@ import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
-import android.widget.TimePicker;
-import android.widget.Toast;
 
-public class MainActivity extends Activity implements OnClickListener, CalendarEntryListener, View.OnLongClickListener, AdapterView.OnItemLongClickListener, TimePickerDialog.OnTimeSetListener {
+public class MainActivity extends Activity implements OnClickListener, CalendarEntryListener, View.OnLongClickListener, AdapterView.OnItemLongClickListener, TimeAdjusterListener {
     private static final String TAG = MainActivity.class.getSimpleName();
 
     private static final boolean LOCAL_LOGD = true;
@@ -197,17 +193,14 @@ public class MainActivity extends Activity implements OnClickListener, CalendarE
     }
 
     private void _punchTimeCardWithTimeAdjust() {
-        Calendar calendar = Calendar.getInstance();
-        int hour = calendar.get(Calendar.HOUR_OF_DAY);
-        int minute = calendar.get(Calendar.MINUTE);
-        new TimePickerDialog(this, this, hour, minute, true).show();
+        new TimeAdjustDialog(this, System.currentTimeMillis())
+        .setAdjustButton(R.string.label_punch, this)
+        .show();
     }
 
     @Override
-    public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-        Calendar calendar = Calendar.getInstance();
-        calendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
-        calendar.set(Calendar.MINUTE, minute);
-        _punchTimeCard(calendar.getTimeInMillis());
+    public void onTimeAdjusted(TimeAdjusterEvent event) {
+        long time = event.getTimeAndOffset()[0];
+        _punchTimeCard(time);
     }
 }

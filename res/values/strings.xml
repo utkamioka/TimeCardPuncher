@@ -17,5 +17,7 @@
     <string name="label_dont">don\'t</string>
     <string name="msg_ask_delete">Delete?</string>
     <string name="label_delete_timestamp">Delete TimeStamp</string>
+    <string name="label_minute">Min.</string>
+    <string name="label_null"/>
 
 </resources>
