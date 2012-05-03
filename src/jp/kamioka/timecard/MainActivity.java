@@ -34,7 +34,7 @@ public class MainActivity extends Activity implements OnClickListener, CalendarE
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        if (LOCAL_LOGV) Log.v(TAG, "onCreate(): in: bundle="+savedInstanceState);
+        if (LOCAL_LOGV) Log.v(TAG, "onCreate(): bundle="+savedInstanceState);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
 
@@ -48,6 +48,42 @@ public class MainActivity extends Activity implements OnClickListener, CalendarE
         mHistoryView.setOnItemLongClickListener(this);
 
         Log.i(TAG, "NFC Enabled="+isNfcEnabled());
+    }
+
+    @Override
+    public void onStart() {
+        if (LOCAL_LOGV) Log.v(TAG, "onStart()");
+        super.onStart();
+    }
+
+    @Override
+    public void onRestart() {
+        if (LOCAL_LOGV) Log.v(TAG, "onRestart()");
+        super.onRestart();
+    }
+
+    @Override
+    public void onResume() {
+        if (LOCAL_LOGV) Log.v(TAG, "onResume()");
+        super.onResume();
+    }
+
+    @Override
+    public void onPause() {
+        if (LOCAL_LOGV) Log.v(TAG, "onPause()");
+        super.onPause();
+    }
+
+    @Override
+    public void onStop() {
+        if (LOCAL_LOGV) Log.v(TAG, "onStop()");
+        super.onStop();
+    }
+
+    @Override
+    public void onDestroy() {
+        if (LOCAL_LOGV) Log.v(TAG, "onDestroy()");
+        super.onDestroy();
     }
 
     @Override
