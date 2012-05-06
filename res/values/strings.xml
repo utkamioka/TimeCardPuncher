@@ -15,7 +15,7 @@
     <string name="label_notify_with_sound">Notify with Sound</string>
     <string name="label_do">do</string>
     <string name="label_dont">don\'t</string>
-    <string name="msg_ask_delete">Delete?</string>
+    <string name="msg_ask_delete">Delete this event?</string>
     <string name="label_delete_timestamp">Delete TimeStamp</string>
     <string name="label_minute">Min.</string>
     <string name="label_null"/>

@@ -8,14 +8,14 @@
     <string name="label_selectcalendar">カレンダー選択</string>
     <string name="label_about">概要</string>
     <string name="label_eventtitle">イベントのタイトル</string>
-    <string name="msg_newevent">Title of new event</string>
+    <string name="msg_newevent">新規イベントのタイトルを指定</string>
     <string name="defaultvalue_eventtitle">TimeStamp</string>
     <string name="msg_empty_calendarname">カレンダーが選択されていません。</string>
     <string name="label_notify_with_vibrate">バイブレーションで通知</string>
     <string name="label_notify_with_sound">サウンドで通知</string>
     <string name="label_do">する</string>
     <string name="label_dont">しない</string>
-    <string name="msg_ask_delete">削除しますか？</string>
+    <string name="msg_ask_delete">このイベントを削除しますか？</string>
     <string name="label_delete_timestamp">タイムスタンプ削除</string>
     <string name="label_minute">分</string>
     

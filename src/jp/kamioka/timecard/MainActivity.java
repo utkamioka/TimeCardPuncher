@@ -148,7 +148,7 @@ public class MainActivity extends Activity implements OnClickListener, CalendarE
         if (parent==mHistoryView) {
             final CalendarEntry calendarEntry = (CalendarEntry)mCalendarEntryAdapter.getItem(position);
             new AlertDialog.Builder(this)
-            .setTitle(R.string.confirm)
+            .setTitle(R.string.delete)
             .setMessage(R.string.msg_ask_delete)
             .setIcon(android.R.drawable.ic_dialog_info)
             .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener(){
