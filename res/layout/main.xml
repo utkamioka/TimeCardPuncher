@@ -8,16 +8,13 @@
         android:id="@+id/button_punch"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="3pt"
-        android:layout_weight="0"
         android:text="@string/label_punch"
-        android:textSize="18pt" />
+        android:textSize="20pt" />
 
     <ListView
         android:id="@+id/list_history"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="0" >
+        android:layout_height="wrap_content" >
     </ListView>
-
+    
 </LinearLayout>
